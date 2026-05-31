@@ -15,10 +15,6 @@ A Flask web application that takes a patient's medical record (text or PDF) and 
   - 🟩 General info (functional status, family contact)
 - **PDF & text input** — paste text directly or upload a PDF
 - **Summary history** — all summaries stored in a local SQLite database
-- **View source** — see the original medical record used to generate each summary
-- **Bulk delete** — select multiple summaries and delete them at once
-- **Live demo** — one-click demo with a realistic patient record (no API key needed to preview)
-- **RTL Hebrew UI** — designed for Israeli medical context
 
 ---
 
@@ -123,6 +119,3 @@ CREATE TABLE summaries (
 - **Mobile-optimized view** — for use on phones inside an ambulance
 - **Audit log** — track who accessed which patient record
 
----
-
-*Developed with the assistance of [Claude](https://claude.ai) (Anthropic)*
