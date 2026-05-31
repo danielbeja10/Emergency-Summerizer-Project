@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+  <a href="javascript:history.back()" class="btn-back" title="חזור">←</a>
+  <h1>היסטוריית סיכומים</h1>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">+ סיכום חדש</a>
+</div>
+
+{% if summaries %}
+  {% for record in summaries %}
+  <div class="card summary-card">
+    <div class="summary-header">
+      <label class="card-checkbox-wrap" title="בחר למחיקה">
+        <input type="checkbox" class="card-checkbox" value="{{ record.id }}">
+      </label>
+      <div class="summary-meta">
+        <span class="source-icon">{% if record.source_type == 'pdf' %}📄{% else %}📝{% endif %}</span>
+        <div>
+          <h2 class="source-name">{{ record.source_name }}</h2>
+          <span class="timestamp">{{ record.created_at }}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <a href="{{ url_for('view_source', summary_id=record.id) }}"
+           class="btn-source" title="צפה ברשומה המקורית"
+           target="{% if record.source_type == 'pdf' %}_blank{% else %}_self{% endif %}">
+          {% if record.source_type == 'pdf' %}📄{% else %}📝{% endif %} מקור
+        </a>
+        <form action="{{ url_for('delete_summary', summary_id=record.id) }}" method="POST"
+              onsubmit="return confirm('למחוק את הסיכום של {{ record.source_name }}?')">
+          <button type="submit" class="btn-delete" title="מחק סיכום">🗑</button>
+        </form>
+      </div>
+    </div>
+
+    <details class="summary-details">
+      <summary class="details-toggle">הצג סיכום ▾</summary>
+      <div class="summary-body" data-summary="{{ record.summary | e }}"></div>
+    </details>
+  </div>
+  {% endfor %}
+{% else %}
+  <div class="card empty-state">
+    <p>אין סיכומים עדיין.</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">צור סיכום ראשון</a>
+  </div>
+{% endif %}
+
+<div class="bulk-bar hidden" id="bulk-bar">
+  <span id="bulk-count">0 נבחרו</span>
+  <button type="button" class="btn-select-all" id="select-all-btn">בחר הכל</button>
+  <button type="button" class="btn btn-danger" id="bulk-delete-btn">🗑 מחק נבחרים</button>
+</div>
+{% endblock %}

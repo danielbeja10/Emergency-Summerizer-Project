@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+  <h1>🆕 צור סיכום חדש</h1>
+</div>
+
+<div class="demo-banner">
+  <div class="demo-banner-text">
+    <span class="demo-label">DEMO</span>
+    <span>רוצה לראות איך זה עובד? לחץ להפעלת סיכום לדוגמה — ללא API key.</span>
+  </div>
+  <form action="{{ url_for('run_demo') }}" method="POST">
+    <button type="submit" class="btn btn-demo">▶ הפעל דמו</button>
+  </form>
+</div>
+
+<div class="card form-card">
+  <form id="summarize-form" action="{{ url_for('do_summarize') }}" method="POST" enctype="multipart/form-data">
+
+    <div class="form-group">
+      <label for="source_name">שם המטופל</label>
+      <input type="text" id="source_name" name="source_name" placeholder="לדוגמה: משה כהן"
+             value="{{ prefill_name or '' }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>סוג קלט</label>
+      <div class="tab-switcher">
+        <button type="button" class="tab-btn {% if prefill_tab != 'pdf' %}active{% endif %}" data-tab="text">טקסט</button>
+        <button type="button" class="tab-btn {% if prefill_tab == 'pdf' %}active{% endif %}" data-tab="pdf">PDF</button>
+      </div>
+      <input type="hidden" name="input_type" id="input_type" value="{{ prefill_tab or 'text' }}">
+    </div>
+
+    <div id="panel-text" class="input-panel {% if prefill_tab == 'pdf' %}hidden{% endif %}">
+      <div class="form-group">
+        <label for="patient_text">רשומה רפואית</label>
+        <textarea id="patient_text" name="patient_text" rows="10"
+          placeholder="הדבק כאן את הרשומה הרפואית של המטופל...">{{ prefill_text or '' }}</textarea>
+      </div>
+    </div>
+
+    <div id="panel-pdf" class="input-panel {% if prefill_tab != 'pdf' %}hidden{% endif %}">
+      <div class="form-group">
+        <label>קובץ PDF</label>
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-zone-icon">📄</div>
+          <p>גרור קובץ PDF לכאן או <label for="pdf_file" class="file-label">לחץ לבחירה</label></p>
+          <input type="file" id="pdf_file" name="pdf_file" accept=".pdf" class="hidden-input">
+          <p id="file-name" class="file-name"></p>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" id="submit-btn" class="btn btn-primary">
+      <span id="btn-text">צור סיכום</span>
+      <span id="btn-spinner" class="spinner hidden"></span>
+    </button>
+
+  </form>
+</div>
+{% endblock %}
